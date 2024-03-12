@@ -89,15 +89,15 @@ static int IsEmpty(SqList* L)
 }
 
 //返回顺序表某一位置的元素
-static DataType* getElem(SqList* L, int pos, bool* got)
+static DataType* getElem(SqList* L, int pos)
 {
 	if (pos<1 || pos>L->length)
 	{
 		printf("位置有误\n");
-		*got = false;
+		
 		return nullptr;
 	}
-	*got = true;
+	
 	return &(L->Data[pos - 1]);
 
 }
@@ -145,6 +145,36 @@ static bool DestroySqList(SqList** L)
 	return true;
 }
 
+// 修改顺序表
+// 指定位置修改
+static bool Modify_By_Location(SqList* L,int location,DataType value)
+{
+	DataType* val = getElem(L, location);
+	if (val)
+	{
+		*val = value;
+		return true;
+	}
+	else
+		return false;
+}
+
+// 指定元素修改（修改所有）
+static bool Modify_By_Value(SqList* L,DataType value, DataType exchanger)
+{
+	if (Locate(L, value))
+	{
+		for (int i = 0; i < L->length; i++)
+		{
+			if (L->Data[i] == value)
+				L->Data[i] = exchanger;
+		}
+		return true;
+	}
+	else
+		return false;
+}
+
 static void test_sqlist()
 {
 	// 创建顺序表并初始化
@@ -173,9 +203,8 @@ static void test_sqlist()
 
 	// 输出位置为3的元素
 	cout << "----测试按位置寻找元素----" << endl;
-	bool get = false;    // 成功取到元素的标志位
-	if (getElem(L, 3, &get))
-		printf("位置为3的元素为：%d\n", *getElem(L, 3, &get));
+	if (getElem(L, 3))
+		printf("位置为3的元素为：%d\n", *getElem(L, 3));
 	else
 		cout << "无法获取" << endl;
 	cout << "----测试完毕----" << endl;
@@ -199,6 +228,8 @@ static void test_sqlist()
 		printf("插入不成功\n");
 	cout << "----测试完毕----" << endl;
 
+
+
 	// 删除第三个元素
 	cout << endl << "-----测试删除元素-----" << endl;
 	if (!DeleteElem(L, 3))
@@ -209,6 +240,38 @@ static void test_sqlist()
 		PrintSqList(L);
 	}
 	cout << "----测试完毕----" << endl;
+
+
+
+	cout << "\n**************测试修改元素***************" << endl;
+	cout << "测试按位置修改" << endl;
+	cout << "请输入要修改的值的位置：";
+	int location; cin >> location;
+	cout << "请输入新的值：";
+	int value; cin >> value;
+	if (Modify_By_Location(L, location, value))
+		cout << "修改成功" << endl;
+	else
+		cout << "修改失败" << endl;
+	cout << "当前的顺序表为：";
+	PrintSqList(L);
+
+
+	cout << "测试按值修改" << endl;
+	cout << "请输入要修改的值：";
+	cin >> location;
+	cout << "请输入新的值：";
+	cin >> value;
+	if (Modify_By_Value(L, location, value))
+		cout << "修改成功" << endl;
+	else
+		cout << "修改失败" << endl;
+
+	cout << "当前的顺序表为：";
+	PrintSqList(L);
+
+	cout << "************测试完毕*************" << endl;
+
 
 
 	//释放顺序表

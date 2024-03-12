@@ -93,7 +93,7 @@ public:
     }
 
     // 输出链表    
-    void print() {
+    void print() const {
         ListNode* cur = head -> next;
         while (cur != NULL) {
             cout << cur->val << " ";
@@ -126,6 +126,56 @@ public:
         return true;
 
     }
+
+    // 按值修改
+    bool modify_by_value(int value, int exchanger)
+    {
+        ListNode* tmp = this->search(value);
+        if (tmp)
+        {
+            tmp = this->head->next;
+            for (int i = 0; i < this->head->val; i++)
+            {
+                if(tmp->val==value)
+                    tmp->val = exchanger;
+                tmp = tmp->next;
+            }
+            return true;
+        }
+        else
+            return false;
+    }
+
+    // 按位置修改
+    bool modify_by_location(int location, int exchanger)
+    {
+        if (location <= 0 || location > this->head->val)
+            return false;
+        ListNode* tmp = this->head;
+        while (location)
+        {
+            tmp = tmp->next;
+            location--;
+        }
+        tmp->val = exchanger;
+        return true;
+    }
+
+    // 销毁链表
+    void Destroy()
+    {
+        if (!this->head)
+            return;
+        ListNode* tmp = head;
+        while (tmp)
+        {
+            head = tmp->next;
+            delete tmp;
+            tmp = head;
+        }
+        this->head = nullptr;
+    }
+
 };
 
 static void test_linked_list() {
@@ -175,5 +225,35 @@ static void test_linked_list() {
     }
     else
         cout << "删除失败" << endl;
+    
+
+    cout << "\n***********测试修改模块**********" << endl;
+    int value,position;
+    cout << "测试按位置修改" << endl;
+    cout << "请输入位置：";  cin >> position;
+    cout << "请输入新的值：";  cin >> value;
+    if (list->modify_by_location(position, value))
+        cout << "修改成功" << endl;
+    else
+        cout << "修改失败" << endl;
+    cout << "当前的链表为：";  list->print();
+    cout << "\n测试按值修改" << endl;
+    cout << "请输入要修改的值："; cin >> position;
+    cout << "请输入新的值：";   cin >> value;
+    if (list->modify_by_value(position, value))
+        cout << "修改成功";
+    else
+        cout << "修改失败" << endl;
+    cout << "当前的链表为：";  list->print();
+    cout << "**********测试完成***********" << endl;
+
+
+    cout << "\n**************测试销毁**********" << endl;
+    list->Destroy();
+    if (!list->head)
+        cout << "销毁成功" << endl;
+    else
+        cout << "销毁失败" << endl;
+    cout << "*********测试完成**********" << endl;
 }
 
